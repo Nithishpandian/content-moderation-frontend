@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lexend:wght@100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* @font-face {
+    font-family: 'SwissNow';
+    src: url('./assets/font/swissnow-font-family-1733689460-0/SwissNowTrial-ExtraBold-BF673ffb8647ee7.otf') format('woff2'),
+         url('./assets/font/swissnow-font-family-1733689460-0/SwissNowTrial-Medium-BF673ffb8669a39.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  } */
+  
+  /* If you have multiple font styles */
+  /* @font-face {
+    font-family: 'SwissNow';
+    src: url('/fonts/swissnow-bold.woff2') format('woff2'),
+         url('/fonts/swissnow-bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+  } */
+  

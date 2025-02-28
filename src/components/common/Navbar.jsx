@@ -7,8 +7,8 @@ const Navbar = () => {
       <h1 className=" font-black text-4xl">ACM</h1>
       <div className=" flex items-center gap-7 font-medium">
         <Link to={"/"}>Home</Link>
-        <Link to={"/upload-video"}>Content moderation</Link>
-        <Link to={"#"}>Use Cases</Link>
+        <Link to={"/upload-video"}>Video blur</Link>
+        <Link to={"/upload-audio"}>Audio Censor</Link>
         <Link to={"#"}>Contact Us</Link>
       </div>
       <div className=" flex items-center gap-3">

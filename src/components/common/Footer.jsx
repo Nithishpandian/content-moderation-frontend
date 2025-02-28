@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <div className=" flex justify-between gap-20 bg-[#323232] py-10 px-8 rounded-3xl">
+    <div className=" flex justify-between gap-20 bg-[#323232] py-10 px-16 rounded-3xl">
       <div className=" flex flex-col gap-5 max-w-[700px]">
         <h1 className=" text-3xl font-bold text-[#f3f3f3]">
           AI Powered Content Moderation

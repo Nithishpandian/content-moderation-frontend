@@ -6,6 +6,7 @@ import { Route, Routes } from "react-router-dom";
 import UploadVideo from "./pages/UploadVideo";
 import AudioCensorFromVideo from "./pages/AudioCensorFromVideo";
 import { Toaster } from "react-hot-toast";
+import VideoUploadCopyright from "./pages/VideoUploadCopyRight";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route index path="/" element={<Home />} />
         <Route index path="/upload-video" element={<UploadVideo />} />
         <Route index path="/upload-audio" element={<AudioCensorFromVideo />} />
+        <Route index path="/upload-copy" element={<VideoUploadCopyright />} />
       </Routes>
       <Footer />
       <Toaster />

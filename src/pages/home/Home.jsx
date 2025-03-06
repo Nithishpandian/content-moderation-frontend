@@ -4,6 +4,7 @@ import landingImg from "../../assets/images/landing-img.avif";
 import landingImg2 from "../../assets/images/landing-img-2.jpg";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { HiOutlinePlus, HiOutlineMinus } from "react-icons/hi2";
+import { motion } from "framer-motion";
 
 const Home = () => {
   const [activeFAQ, setActiveFAQ] = useState(null); // state to manage active FAQ
@@ -37,11 +38,11 @@ const Home = () => {
       answer:
         "The AI continuously learns and adapts using advanced machine learning algorithms, analyzing vast amounts of video data to improve detection accuracy. It combines real-time analysis with human oversight to ensure that flagged content is thoroughly reviewed and assessed.",
     },
-    {
-      question: "Can the AI handle different languages and cultural contexts ?",
-      answer:
-        "Yes, our AI system is designed to understand and analyze content in multiple languages, considering cultural and contextual differences to ensure accurate moderation. It is built to detect harmful content regardless of the language or region.",
-    },
+    // {
+    //   question: "Can the AI handle different languages and cultural contexts ?",
+    //   answer:
+    //     "Yes, our AI system is designed to understand and analyze content in multiple languages, considering cultural and contextual differences to ensure accurate moderation. It is built to detect harmful content regardless of the language or region.",
+    // },
     {
       question: "Is human intervention required in the moderation process ?",
       answer:
@@ -53,9 +54,26 @@ const Home = () => {
     setActiveFAQ((prev) => (prev === index ? null : index)); // toggle FAQ visibility
   };
 
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  };
+
   return (
     <div className=" flex flex-col gap-40 py-28 px-14">
-      <div className=" grid grid-cols-2 gap-24">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        variants={sectionVariants}
+        viewport={{
+          once: true,
+        }}
+        className=" grid grid-cols-2 gap-24"
+      >
         <div className=" flex flex-col gap-6 justify-around">
           <h1 className=" font-extrabold text-6xl">
             Revolutionizing Content Moderation with AI
@@ -79,10 +97,18 @@ const Home = () => {
           </div>
         </div>
         <div className="flex items-center justify-center">
-          <img src={landingImg} className=" w-[90%] " alt="" />
+          <motion.img src={landingImg} className=" w-[90%] " alt="" />
         </div>
-      </div>
-      <div className=" flex flex-col gap-10">
+      </motion.div>
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        variants={sectionVariants}
+        viewport={{
+          once: true,
+        }}
+        className=" flex flex-col gap-10"
+      >
         <h1 className=" text-center text-5xl font-bold">
           How to Use Our Application:
         </h1>
@@ -96,8 +122,16 @@ const Home = () => {
             />
           ))}
         </div>
-      </div>
-      <div className=" grid grid-cols-2 gap-20">
+      </motion.div>
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        variants={sectionVariants}
+        viewport={{
+          once: true,
+        }}
+        className=" grid grid-cols-2 gap-20"
+      >
         <div className="flex items-center justify-center">
           <img src={landingImg2} className=" rounded-xl " alt="" />
         </div>
@@ -122,8 +156,16 @@ const Home = () => {
             </p>
           </div>
         </div>
-      </div>
-      <div className=" grid grid-cols-3">
+      </motion.div>
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        variants={sectionVariants}
+        viewport={{
+          once: true,
+        }}
+        className=" grid grid-cols-3"
+      >
         <h1 className=" text-6xl font-black">FAQ</h1>
         <div className=" col-span-2 flex flex-col gap-2 text-xl">
           {faqContentData.map((item, index) => (
@@ -154,7 +196,7 @@ const Home = () => {
             </div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

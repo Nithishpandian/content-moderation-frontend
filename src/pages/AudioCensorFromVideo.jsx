@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import axios from "axios";
 import { FaUpload } from "react-icons/fa";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 
 function AudioCensorFromVideo() {
   const [video, setVideo] = useState(null);
@@ -25,14 +26,28 @@ function AudioCensorFromVideo() {
       return;
     }
 
-    if (file.size > 500 * 1024 * 1024) {
-      // Example: 500MB limit
+    if (file.size > 50 * 1024 * 1024) {
+      // Example: 50MB limit
       toast.error("File size exceeds the 500MB limit.");
       return;
     }
+    const videoElement = document.createElement("video");
+    videoElement.preload = "metadata";
+    videoElement.src = URL.createObjectURL(file);
 
-    setVideo(file);
-    setVideoName(file.name);
+    videoElement.onloadedmetadata = () => {
+      URL.revokeObjectURL(videoElement.src); // Free memory
+      if (videoElement.duration > 120) {
+        toast.error("Video length should be less than 2 minutes.");
+        return;
+      }
+
+      setVideo(file);
+      setVideoName(file.name);
+    };
+
+    // setVideo(file);
+    // setVideoName(file.name);
   };
 
   const handleCheckboxChange = (word) => {
@@ -91,21 +106,40 @@ function AudioCensorFromVideo() {
     }
   };
 
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  };
+
   return (
     // <div>
     //   <h1>Video Moderation</h1>
     //   <input type="file" accept="video/*" onChange={handleFileChange} />
     //   <button onClick={handleUpload}>Upload</button>
-    <div className=" text-center flex flex-col gap-10 py-20 px-14">
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      variants={sectionVariants}
+      viewport={{
+        once: true,
+      }}
+      className=" text-center flex flex-col gap-10 py-20 px-14"
+    >
       <div className=" flex flex-col gap-5">
-        <h1 className=" text-5xl font-bold">Video Moderation Made Easy</h1>
+        <h1 className=" text-5xl font-bold">
+          Upload Your Video for Audio Moderation
+        </h1>
         <div className=" flex items-center justify-center">
           <p className=" max-w-[850px]">
-            Upload your video effortlessly and let our AI-powered system analyze
-            and moderate the content for safety and compliance. Simply drag and
-            drop your video or select it from your device to begin. Experience a
-            fast, reliable, and secure moderation process to ensure your content
-            meets global standards.
+            Easily upload your video, and our AI-powered system will analyze the
+            audio for inappropriate content. Any detected offensive language
+            will be automatically muted, ensuring a safe and compliant video.
+            Simply drag and drop your video or select it from your device to get
+            started!
           </p>
         </div>
       </div>
@@ -136,9 +170,9 @@ function AudioCensorFromVideo() {
             <button
               onClick={handleUpload}
               disabled={!video}
-              className=" group disabled:opacity-80 flex items-center justify-center gap-2 cursor-pointer bg-[#6875FF] text-white font-semibold py-3 px-6 rounded-full transition duration-500"
+              className=" group disabled:opacity-80 flex items-center justify-center gap-2 cursor-pointer bg-[#6875FF] text-white font-semibold py-3 px-6 rounded-full hover:opacity-80 transition duration-500"
             >
-              Upload & Process
+              Upload & Moderate
             </button>
           </div>
           {videoName && (
@@ -221,34 +255,68 @@ function AudioCensorFromVideo() {
                 </h2>
               </div>
               <div className=" flex items-center flex-wrap gap-3 p-4">
-                {detectedWords.map((word) => (
+                {detectedWords.map((word) => {
+                  // Sanitize detected word (remove punctuation and spaces)
+                  const sanitizedWord = word
+                    .replace(/[^\w\s]/gi, "")
+                    .toLowerCase();
+
+                  // Find a matching key in word_intervals by sanitizing both word and key
+                  const matchingIntervals = Object.keys(wordIntervals).find(
+                    (key) =>
+                      key.replace(/[^\w\s]/gi, "").toLowerCase() ===
+                      sanitizedWord
+                  );
+
+                  return (
+                    <div
+                      key={word}
+                      onClick={() => handleCheckboxChange(word)}
+                      className={`border ${
+                        selectedWords.has(word)
+                          ? "bg-[#6875FF] text-white"
+                          : "bg-white text-[#6875FF] hover:bg-slate-50"
+                      } border-[#6875FF] font-medium py-2 px-5 rounded cursor-pointer duration-300`}
+                    >
+                      {word}
+                      {matchingIntervals &&
+                        wordIntervals[matchingIntervals]?.length > 0 && (
+                          <span className="text-stone-400 text-nowrap font-normal text-sm ml-2">
+                            (at{" "}
+                            {wordIntervals[matchingIntervals]
+                              .map(
+                                ([start, end]) =>
+                                  `[${start.toFixed(2)}s - ${end.toFixed(2)}s]`
+                              )
+                              .join(", ")}
+                            )
+                          </span>
+                        )}
+                    </div>
+                  );
+                })}
+                {/* {detectedWords.map((word) => (
                   <div
                     key={word}
                     onClick={() => handleCheckboxChange(word)}
                     className={` border ${
                       selectedWords.has(word)
                         ? " bg-[#6875FF] text-white"
-                        : "bg-white text-[#6875FF] "
-                    } border-[#6875FF] font-medium py-2 px-5 rounded cursor-pointer`}
+                        : "bg-white text-[#6875FF] hover:bg-slate-50"
+                    } border-[#6875FF] font-medium py-2 px-5 rounded cursor-pointer duration-300`}
                   >
-                    {/* <input
-                        type="checkbox"
-                        value={word}
-                        checked={selectedWords.has(word)}
-                        onChange={() => handleCheckboxChange(word)}
-                      /> */}
                     {word}{" "}
-                    {wordIntervals[word] && (
-                      <span className=" text-stone-400 text-nowrap font-normal text-sm ml-2">
+                    {wordIntervals[word]?.length > 0 && (
+                      <span className="text-stone-400 text-nowrap font-normal text-sm ml-2">
                         (at{" "}
                         {wordIntervals[word]
-                          .map((range) => `[${range[0]}s - ${range[1]}s]`)
+                          .map(([start, end]) => `[${start}s - ${end}s]`)
                           .join(", ")}
                         )
                       </span>
                     )}
                   </div>
-                ))}
+                ))} */}
               </div>
               <div className=" flex items-center justify-end">
                 <button
@@ -281,7 +349,7 @@ function AudioCensorFromVideo() {
           )}
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
 

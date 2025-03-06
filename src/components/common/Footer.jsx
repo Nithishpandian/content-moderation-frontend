@@ -1,9 +1,33 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Footer = () => {
+  const animationVariantFadeIn = {
+    initial: {
+      opacity: 0,
+      y: 0,
+    },
+    animate: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 1,
+        ease: "easeOutIn",
+      },
+    },
+  };
+
   return (
-    <div className=" flex justify-between gap-20 bg-[#323232] py-10 px-16 rounded-3xl">
+    <motion.div
+      variants={animationVariantFadeIn}
+      initial="initial"
+      whileInView={"animate"}
+      viewport={{
+        once: true,
+      }}
+      className=" flex justify-between gap-20 bg-[#323232] py-10 px-16 rounded-3xl"
+    >
       <div className=" flex flex-col gap-5 max-w-[700px]">
         <h1 className=" text-3xl font-bold text-[#f3f3f3]">
           AI Powered Content Moderation
@@ -18,10 +42,18 @@ const Footer = () => {
       <div className=" flex flex-col gap-5">
         <h2 className=" text-[#f3f3f3] font-semibold text-lg">Links</h2>
         <div className=" flex flex-col gap-2 font-medium text-stone-300">
-          <Link to={"/"}>Home</Link>
-          <Link to={"/upload-video"}>Content moderation</Link>
-          <Link to={"#"}>Use Cases</Link>
-          <Link to={"#"}>Contact Us</Link>
+          <Link to={"/"} className=" hover:opacity-80 duration-300">
+            Home
+          </Link>
+          <Link to={"/upload-video"} className=" hover:opacity-80 duration-300">
+            Video blur
+          </Link>
+          <Link to={"/upload-audio"} className=" hover:opacity-80 duration-300">
+            Audio Censor
+          </Link>
+          <Link to={"#"} className=" hover:opacity-80 duration-300">
+            Contact Us
+          </Link>
         </div>
       </div>
       <div className=" flex flex-col gap-5">
@@ -31,7 +63,7 @@ const Footer = () => {
           <Link to={"#"}>Privacy policy</Link>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
